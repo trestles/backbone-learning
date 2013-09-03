@@ -1,0 +1,114 @@
+<html>
+
+
+<body>
+<div id='app'></div>
+<script src='jquery.js'></script>
+<script src='underscore.js'></script>
+<script src='backbone.js'></script>
+
+<script type='text/template' id='item-detail'>
+  name: <%=name %>
+</script>
+
+<script type='text/template' id='item-list'>
+<% _.each(collection, function(client) { %>
+<tr>
+    <td><a href=""><%- client.get('FirstName') %></a></td>
+    <td><a href=""><%- client.get('LastName') %></a></td>
+    <td><a href=""><%- client.get('Status') %></a></td>
+</tr>
+<% }); %>
+</script>
+
+<script>
+$(document).ready(function(){
+  console.log("here i am");	
+
+var MyItem=Backbone.Model.extend({});
+
+
+var MyItemList=Backbone.Collection.extend({url:'items.json', model:MyItem});
+
+  var MyItemView=Backbone.View.extend({
+	
+	template:_.template($('#item-detail').text()),
+    render:function(){
+	  var temp=this.template(this.model.toJSON());
+	  this.$el.html(temp);
+	  return this;
+    }	
+  });
+
+  var ItemListView=Backbone.View.extend({
+	el:$('#app'),
+	template:_.template($('#item-list').text()),
+	/*
+	initialize:function(){
+      _.bindAll(this, 'render');		 
+	  this.render();	
+	},
+	*/
+	    render:function(){
+	  this.collection.forEach(this.addOne, this);
+	  //this.$el.html(this.template(this.collection));
+	  //this.$el.html("here are a list of things");
+    },
+    addOne:function(item){
+	  console.log("about to add one" + item.toJSON());
+	  var itemView = new MyItemView({model:item});
+	  console.log(itemView.render().el);
+	  $(this.el).append(itemView.render().el);
+    }	
+  });
+
+  var AppRouter=Backbone.Router.extend({
+	 routes:{'':'list','detail/:id':'detail'},
+	 list:function(){
+	 var itemList=new MyItemList();
+	 itemList.fetch({ 
+                          error: function () {
+                            console.log("error!!"); 
+                          },
+                          success: function () {
+                             console.log("no error"); 
+                          }
+     }).complete(function () {
+                           console.log('done');
+                           console.log('length1:' +  itemList.length);
+       //_.each(itemList.models, fuction(m){
+	      //console.log(m);
+       //});
+       var itemListView=new ItemListView( { collection:itemList} );
+       itemListView.render();
+       console.log(itemListView.el);
+     });
+      console.log('length2: '+ itemList.length);
+	},
+	 detail:function(id){
+	   console.log("here is index");	
+	  var jtItem=new MyItem({name:'jt'});
+	  var my=new MyItemView({model:jtItem});
+	  my.render();
+
+	  $('#app').html(my.el);
+
+	}
+  });
+  new AppRouter();
+  Backbone.history.start();
+  
+  /*
+  var jtItem=new MyItem({name:'jt'});
+  var my=new MyItemView({model:jtItem});
+  my.render();
+  $('#app').html(my.el);
+  */
+  //console.log(my.el);
+	
+});
+</script>
+
+
+</html>
+</html>

@@ -1,0 +1,72 @@
+<html>
+
+
+<body>
+<div id='app'></div>
+<script src='jquery.js'></script>
+<script src='underscore.js'></script>
+
+
+<script src='backbone.js'></script>
+
+<script type='text/template' id='t1'>
+  <%=name %><a href='#some'>here</a>
+  <div class='my-event'>click here</div>
+</script>
+
+<script>
+
+$(document).ready(function(){
+  var Item=Backbone.Model.extend({
+  });
+  var myItem=new Item({name:"Jonathan"});
+  var someItem=new Item({name:"Blue Bird"});
+
+  var MyView=Backbone.View.extend({
+	el:$('#app'),
+	events:{'click .my-event':'sayHello'},
+	template:_.template($('#t1').text()),
+	initialize: function(){
+	this.model.on('change', this.render, this);
+	},
+	render:function(){
+      this.$el.html(this.template(this.model.toJSON()));
+	},
+	sayHello:function(){
+      this.model.set({name:"you clicked - shame on you"});
+      console.log('I want to say Hello');		
+	}
+  });
+
+  
+  var appRouter=Backbone.Router.extend({
+	routes:{"":"index",
+	  "some":"someFunction",
+	   "profile/:id":"profileFunction"
+	},
+	index:function(){
+	  console.log("here i am");
+	  var myView=new MyView({model:myItem});
+	  myView.render();
+	  //console.log(myView.el);
+
+	},
+	someFunction:function(){
+	  var myView=new MyView({model:someItem});	
+	  console.log("within someFunction");
+	  myView.render();
+	},
+	profileFunction:function(id){
+	  console.log("here is my profile" + id);	
+	}
+  });
+  new appRouter();
+  Backbone.history.start();
+});
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<html>
+
+
+<body>
+<div id="app"></div>
+
+<script src='jquery.js'></script>
+<script src='underscore.js'></script>
+<script src='backbone.js'></script>
+
+<script>
+
+
+// lets create a few views
+
+$(document).ready(function(){
+
+var MyView=Backbone.View.extend({
+  className:"something",
+  render:function(){
+    this.$el.html("here is my stuff");
+
+  }
+  
+});
+
+var myView=new MyView(); 
+myView.render();
+console.log(myView.el);
+//Backbone.history.start();
+$('#app').html(myView.el);
+
+
+/*
+
+  var appRouter=Backbone.Router.extend({
+    routes:{"":"show"},
+
+    show:function(){
+      alert('here is my function');
+    }
+  });
+  new appRouter();
+  var myView=new MyView();  
+  console.log(myView.el);
+  
+  Backbone.history.start();
+  $('#app').html(myView.el);
+
+*/
+});
+
+</script>
+
+</body>
+</html>

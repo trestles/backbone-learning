@@ -1,13 +1,19 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <title>Nested Views in Backbone</title>
+<style>
+  #band-container{
+	width: 200px;
+	border: 1px solid red;
+}
+</style>
 </head>
 
 <body>
-
+<div id='band-container'>
 <ul id="band-wrapper"></ul>
+</div>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="underscore.js"></script>
@@ -73,6 +79,7 @@ Band.Members.View = Backbone.View.extend({
         
     // loop through all of the items in the collection, creating a 
     // view for each
+    console.log(this.collection);
     this.collection.each(function(bandMember) {
       var bandMemberView = new Band.Member.View({
         model: bandMember
